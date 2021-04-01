@@ -9,8 +9,10 @@
           <a href="javascript:;">协议规则</a>
         </div>
         <div class="top-user">
-          <a href="javasript:;">登录</a>
-          <a href="javasript:;" class="my-cart"><span class="icon-cart"></span> 购物车</a>
+          <a href="javasript:;" v-if="username">{{username}}</a>
+          <a href="javasript:;" v-else @click="login">登录</a>
+          <a href="javasript:;" v-if="username">我的订单</a>
+          <a href="javasript:;" class="my-cart"><span class="icon-cart" @click="gotoCart"></span> 购物车</a>
         </div>
       </div>
     </div>
@@ -24,60 +26,15 @@
             <span>小米手机</span>
             <div class="children">
               <ul>
-                <li class="product">
-                  <a href="" target="_blank">
+                <li class="product" v-for="(phone,i) of  phoneList" :key="i">
+                  <a href="`/#/product/${phone.id}`" target="_blank">
                     <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
+                      <img :src="phone.mainImage">
                     </div>
-                    <div class="pro-name">小米CC9</div>
-                    <div class="pro-price">¥ 1799</div>
+                    <div class="pro-name">{{phone.name}}</div>
+                    <div class="pro-price">{{phone.price | currency}}</div>
                   </a>
-                </li>
-                <li class="product">
-                  <a href="" target="_blank">
-                    <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
-                    </div>
-                    <div class="pro-name">小米CC9</div>
-                    <div class="pro-price">¥ 1799</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="" target="_blank">
-                    <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
-                    </div>
-                    <div class="pro-name">小米CC9</div>
-                    <div class="pro-price">¥ 1799</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="" target="_blank">
-                    <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
-                    </div>
-                    <div class="pro-name">小米CC9</div>
-                    <div class="pro-price">¥ 1799</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="" target="_blank">
-                    <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
-                    </div>
-                    <div class="pro-name">小米CC9</div>
-                    <div class="pro-price">¥ 1799</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="" target="_blank">
-                    <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
-                    </div>
-                    <div class="pro-name">小米CC9</div>
-                    <div class="pro-price">¥ 1799</div>
-                  </a>
-                </li>
+                </li> 
               </ul>
             </div>
           </div>
@@ -165,6 +122,13 @@ export default {
       phoneList:[],
     }
   },
+  //过滤器
+  filters:{
+    currency(oldVal){
+      if(!oldVal) return '0.00';
+      return `¥ ${oldVal.toFixed(2)}元`
+    }
+  },
   methods:{
     getProductList(){
       this.axios.get('/products',{
@@ -174,7 +138,16 @@ export default {
         }
       }).then(res=>{
         console.log(res)
+        if(res.list.length>=6){
+          this. phoneList=res.list.slice(0,6)
+        }
       })
+    },
+    login(){
+      this.$router.push(`/login`)
+    },
+    gotoCart(){
+      this.$router.push(`/cart`)
     }
   },
   mounted(){

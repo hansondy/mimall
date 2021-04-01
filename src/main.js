@@ -5,7 +5,7 @@ import router from './router'
 import store from './store'
 
 //配置基础路径
-axios.defaults.baseURL='/api'
+//axios.defaults.baseURL='/api'
 axios.defaults.timeout=8000
 
 Vue.config.productionTip = false
