@@ -9,38 +9,34 @@
               <div class="children">
                 <ul v-for="(item,index) of menuList" :key="index">
                   <li v-for="(phone,i) of item" :key="i">
-                    <a href="javascript:;"></a>
+                    <a :href="phone ? `/#/product/${phone.id}` : ''">
+                      <img :src="phone ? phone.img : '/imgs/item-box-1.png'">
+                      {{phone ? phone.name : '小米9'}}
+                    </a>
                   </li>
-                </ul>
+                </ul> 
               </div>
             </li>
             <li class="menu-item">
               <a href="javascript:;">电视 盒子</a>
-              <div class="children"></div>
             </li>
             <li class="menu-item">
               <a href="javascript:;">笔记本 平板</a>
-              <div class="children"></div>
             </li>
             <li class="menu-item">
               <a href="javascript:;">家电 插线板</a>
-              <div class="children"></div>
             </li>
             <li class="menu-item">
               <a href="javascript:;">出行 穿戴</a>
-              <div class="children"></div>
             </li>
             <li class="menu-item">
               <a href="javascript:;">智能 路由器</a>
-              <div class="children"></div>
             </li>
             <li class="menu-item">
               <a href="javascript:;">电源 配件</a>
-              <div class="children"></div>
             </li>
             <li class="menu-item">
               <a href="javascript:;">生活 箱包</a>
-              <div class="children"></div>
             </li>
           </ul>
         </div>
@@ -53,10 +49,46 @@
           <div class="swiper-button-next" slot="button-next"></div>
         </swiper>
       </div>
-      <div class="ads-box"></div>
-      <div class="banner"></div>
-      <div class="product-box"></div>
+      <div class="ads-box">
+        <a :href="`/#/product/${item.id}`" v-for="(item,index) of adsList" :key="index">
+          <img :src="item.img">
+        </a>
+      </div>
+      <div class="banner">
+        <a href="/#/product/30">
+          <img src="imgs/banner-1.png">
+        </a>
+      </div>
+      
     </div>
+    <div class="product-box">
+      <div class="container">
+        <h2>手机</h2>
+        <div class="wrapper">
+          <div class="banner-left">
+            <a href="/#/product/33">
+              <img src="/imgs/mix-alpha.jpg" alt="">
+            </a>
+          </div>
+          <div class="list-box">
+            <div class="list" v-for="(item,i) of phoneList" :key="i">  
+              <div class="item" v-for="(phones,j) of item" :key="j">
+                <span></span>
+                <div class="item-img">
+                  <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6f2493e6c6fe8e2485c407e5d75e3651.jpg" alt="">
+                </div>
+                <div class="item-info">
+                  <h3>小米9</h3>
+                  <p>6400万全场景四摄</p>
+                  <p class="price">1399</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      </div>
     <nav-service></nav-service>
   </div>
 </template>
@@ -130,16 +162,36 @@ export default {
           },
           {
             id:32,
-            img:'/imgs/item-box-3.png',
+            img:'/imgs/item-box-3.jpg',
             name:'Redmi K20 Pro'
           },
           {
             id:33,
-            img:'/imgs/item-box-4.png',
+            img:'/imgs/item-box-4.jpg',
             name:'移动4G专区'
           },
-        ],[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]
-      ]
+        ],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]
+      ],
+      //广告位 数据列表
+      adsList:[
+        {
+          id:33,
+          img:'/imgs/ads/ads-1.png'
+        },
+        {
+          id:48,
+          img:'/imgs/ads/ads-2.jpg'
+        },
+        {
+          id:45,
+          img:'/imgs/ads/ads-3.png'
+        },
+        {
+          id:47,
+          img:'/imgs/ads/ads-4.jpg'
+        }
+      ],
+      phoneList:[[1,1,1,1],[1,1,1,1]]
     }
   },
   methods:{},
@@ -181,6 +233,38 @@ export default {
               }
               &:hover{
                 background: $colorA;
+                .children{
+                  display: block;
+                }
+              }
+              .children{
+                display: none;
+                width: 962px;
+                height: 451px;
+                position: absolute;
+                top: 0;left: 264px;
+                z-index: 0;
+                background: $colorG;
+                border: 1px solid $colorH;
+                ul{
+                  display: flex;
+                  justify-content: space-between;
+                  height: 75px;
+                  li{
+                    height: 75px;
+                    line-height: 75px;
+                    flex:1;
+                    a{
+                      color: $colorB;
+                      font-size: 14px;
+                    }
+                    img{
+                      width: 42px;height: 35px;
+                      vertical-align: middle;
+                      margin-right: 15px;
+                    }
+                  }
+                }
               }
             }
           }
@@ -196,6 +280,89 @@ export default {
           }
         }
       }
+      .ads-box{
+        @include flex();
+        margin-top: 14px;
+        margin-bottom: 31px;
+        a{
+          width: 296px;height: 167px;
+        }
+      }
+      .banner{
+        margin-bottom: 50px;
+      }
     }
+    .product-box{
+        background: $colorJ;
+        padding: 30px 0 50px;
+        h2{
+          font-size: $fontF;
+          height: 21px;
+          line-height: 21px;
+          color: $colorB;
+          margin-bottom: 20px;
+        }
+        .wrapper{
+          display: flex;
+          .banner-left{
+            margin-right: 16px;
+            img{
+              width: 224px;
+            height: 619px;
+            }
+          }
+          .list-box{
+            .list{
+              @include flex();
+              width: 986px;
+              margin-bottom: 14px;
+              &:last-child{
+                margin-bottom: 0;
+              }
+              .item{
+                width:236px;
+                height: 302px;
+                background: $colorG;
+                text-align: center;
+                .span{
+                  width: 20px;
+                }
+                .item-img{
+                  height: 195px;
+                  img{
+                    width: 100%;
+                    height: 195px;
+                  }
+                }
+                .item-info{
+                  h3{
+                    font-size: $fontJ;
+                    color: $colorB;
+                    line-height: $fontJ;
+                    font-weight: bold;
+                  }
+                  p{
+                    color: $colorD;
+                    line-height: 13px;
+                    margin: 6px auto 13px;
+                  }
+                  .price{
+                    font-size: $fontJ;
+                    color: #f20a0a;
+                    font-weight: bold;
+                    cursor: pointer;
+                    &::after{
+                      content: "";
+                      margin-left: 5px;
+                      @include backImg(22px,22px,'/imgs/icon-cart-hover.png');
+                      vertical-align: middle;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
   }
 </style>
