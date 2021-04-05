@@ -51,12 +51,12 @@
       </div>
       <div class="ads-box">
         <a :href="`/#/product/${item.id}`" v-for="(item,index) of adsList" :key="index">
-          <img :src="item.img">
+          <img v-lazy="item.img">
         </a>
       </div>
       <div class="banner">
         <a href="/#/product/30">
-          <img src="imgs/banner-1.png">
+          <img v-lazy="'imgs/banner-1.png'">
         </a>
       </div>
       
@@ -67,33 +67,38 @@
         <div class="wrapper">
           <div class="banner-left">
             <a href="/#/product/33">
-              <img src="/imgs/mix-alpha.jpg" alt="">
+              <img v-lazy="'/imgs/mix-alpha.jpg'" alt="">
             </a>
           </div>
           <div class="list-box">
             <div class="list" v-for="(item,i) of phoneList" :key="i">  
               <div class="item" v-for="(phones,j) of item" :key="j">
-                <span></span>
+                <span :class="{'new-pro':j%2==0}">新品</span>
                 <div class="item-img">
-                  <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6f2493e6c6fe8e2485c407e5d75e3651.jpg" alt="">
+                  <img v-lazy="phones.mainImage" alt="">
                 </div>
                 <div class="item-info">
-                  <h3>小米9</h3>
-                  <p>6400万全场景四摄</p>
-                  <p class="price">1399</p>
+                  <h3>{{phones.name}}</h3>
+                  <p>{{phones.subtitle}}</p>
+                  <p class="price" @click="addCart(phones.id)">{{phones.price}}元</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-        
-      </div>
+    </div>
     <nav-service></nav-service>
+    <modal title="提示" sureText="查看购物车" cancelText="取消" btnType="1" modalType="middle" :showModal="showModal" @submit="goToCart" @cancel="cancel">
+      <template v-slot:body>
+        <p>商品添加成功!</p>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 import navService from '@/components/Service.vue'
+import Modal from '@/components/Modal.vue'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/dist/css/swiper.css';
 // import 'swiper/css/swiper.css'
@@ -102,7 +107,8 @@ export default {
   components:{
     navService,
     Swiper,
-    SwiperSlide, 
+    SwiperSlide,
+    Modal,
   },
   data(){
     return {
@@ -191,11 +197,46 @@ export default {
           img:'/imgs/ads/ads-4.jpg'
         }
       ],
-      phoneList:[[1,1,1,1],[1,1,1,1]]
+      phoneList:[],
+      //对话框的显示与隐藏
+      showModal:false,
     }
   },
-  methods:{},
+  methods:{
+    //获取商品列表
+    init(){
+      this.axios.get('/products',{
+        params:{
+          categoryId:100012,
+          pageSize:14
+        }
+      }).then(res=>{
+        res.list=res.list.slice(6,14)
+        this.phoneList=[res.list.slice(0,4),res.list.slice(4,8)]
+        console.log(this.phoneList)
+      })
+    },
+    //加入购物车
+    addCart(id){
+      this.axios.post('/carts',{
+        productId:id,
+        selected:true
+      }).then(res=>{
+        this.showModal=true
+        this.$store.dispatch('saveCartCount',res.cartTotalQuantity);
+      })
+    },
+    //跳转到购物车
+    goToCart(){
+      this.$router.push('/carts')
+    },
+    //取消加入购物车事件
+    cancel(){
+      this.showModal=false
+    }
+  },
   mounted(){
+    this.init()
   },
 }
 </script>
@@ -324,8 +365,19 @@ export default {
                 height: 302px;
                 background: $colorG;
                 text-align: center;
-                .span{
-                  width: 20px;
+                span{
+                  display: inline-block;
+                  width: 67px;
+                  height: 24px;
+                  font-size: 14px;
+                  line-height: 24px;
+                  color: $colorG;
+                  &.new-pro{
+                    background: #7ecf68;
+                  }
+                  &.kill-pro{
+                    background: #e82626;
+                  }
                 }
                 .item-img{
                   height: 195px;

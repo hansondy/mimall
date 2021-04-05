@@ -12,7 +12,7 @@
           <a href="javasript:;" v-if="username">{{username}}</a>
           <a href="javasript:;" v-else @click="login">登录</a>
           <a href="javasript:;" v-if="username">我的订单</a>
-          <a href="javasript:;" class="my-cart"><span class="icon-cart" @click="gotoCart"></span> 购物车</a>
+          <a href="javasript:;" class="my-cart"><span class="icon-cart" @click="gotoCart"></span> 购物车({{cartCount}})</a>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
                 <li class="product" v-for="(phone,i) of  phoneList" :key="i">
                   <a href="`/#/product/${phone.id}`" target="_blank">
                     <div class="pro-img">
-                      <img :src="phone.mainImage">
+                      <img v-lazy="phone.mainImage">
                     </div>
                     <div class="pro-name">{{phone.name}}</div>
                     <div class="pro-price">{{phone.price | currency}}</div>
@@ -48,7 +48,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img src="/imgs/nav-img/nav-3-1.jpg">
+                      <img v-lazy="'/imgs/nav-img/nav-3-1.jpg'">
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">¥ 1799</div>
@@ -57,7 +57,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
+                      <img v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png'">
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">¥ 1799</div>
@@ -66,7 +66,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
+                      <img v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png'">
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">¥ 1799</div>
@@ -75,7 +75,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
+                      <img v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png'">
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">¥ 1799</div>
@@ -84,7 +84,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
+                      <img v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png'">
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">¥ 1799</div>
@@ -93,7 +93,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png">
+                      <img v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/f515ab05232ed14ccd78ec67e024495a.png'">
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">¥ 1799</div>
@@ -118,7 +118,6 @@ export default {
   name:'indexHeader',
   data(){
     return {
-      username:'jack',
       phoneList:[],
     }
   },
@@ -127,6 +126,14 @@ export default {
     currency(oldVal){
       if(!oldVal) return '0.00';
       return `¥ ${oldVal.toFixed(2)}元`
+    }
+  },
+  computed:{
+    username(){
+      return this.$store.state.username
+    },
+    cartCount(){
+      return this.$store.state.cartCount
     }
   },
   methods:{
@@ -147,7 +154,8 @@ export default {
       this.$router.push(`/login`)
     },
     gotoCart(){
-      this.$router.push(`/cart`)
+      console.log(333333)
+      this.$router.push(`/carts`)
     }
   },
   mounted(){
@@ -189,27 +197,7 @@ export default {
       position: relative;
       height: 112px;
       @include flex();
-      .header-logo{
-        width: 55px;height: 55px;
-        background: #FF6600;
-        a{
-          display: inline-block;
-          width: 110px;height: 55px;
-          &:before{
-            content: " ";
-            @include backImg(55px,55px,'/imgs/mi-logo.png',55px);
-            transition: .2s;
-          }
-          &:hover:before{
-            margin-left: -55px;
-          }
-          &::after{
-            content: " ";
-            @include backImg(55px,55px,'/imgs/mi-home.png',55px);
-            transition: .2s;
-          }
-        }
-      }
+      
       .header-menu{
         width: 643px;
         padding-left: 209px;
